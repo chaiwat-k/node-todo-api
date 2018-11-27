@@ -26,13 +26,13 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db)=>{
     // });    
 
     // findOneAndDelete
-    db.collection('Todos').findOneAndDelete({completed:true})
-    .then((result)=>{
-        console.log(result);
-    })
-    .catch((err)=>{
-        console.log('Unable to delete: ', err);
-    });
+    // db.collection('Todos').findOneAndDelete({completed:true})
+    // .then((result)=>{
+    //     console.log(result);
+    // })
+    // .catch((err)=>{
+    //     console.log('Unable to delete: ', err);
+    // });
 
     // db.close();
 });
