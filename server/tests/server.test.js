@@ -12,7 +12,9 @@ const mockTodos = [
     },
     {
         _id: new ObjectID(),
-        text:'2nd test todo'
+        text:'2nd test todo',
+        completed:true,
+        completedAt: 222
     }
 ];
 
@@ -106,10 +108,9 @@ describe('DELETE /todos/:id', ()=>{
         });
         
     });
-    it('should return 404 if todo not found', (done) => {
-        var hexId = mockTodos[1]._id.toHexString();
+    it('should return 404 if todo not found', (done) => {       
         request(app)
-        .delete('/todos/'+hexId)
+        .delete('/todos/xxx')
         .expect(404)
         .end(done);
     });
@@ -118,5 +119,49 @@ describe('DELETE /todos/:id', ()=>{
         .delete('/todos/xxx')
         .expect(404)
         .end(done);        
+    });
+});
+
+describe('PATCH /todos/:id', ()=>{
+
+    it('should update a todo with given ID', (done)=>{
+        // Grab id if first item
+        // update text
+        // set completed = true
+        // assert 200
+        // assert text has been changed
+        // assert completedAt is a number and toBe the given   
+        var newText =  "Something did yesterday...";    
+        var hexId = mockTodos[0]._id.toHexString();
+        request(app)
+        .patch('/todos/'+hexId)
+        .send({text: newText, completed: true})
+        .expect(200)
+        .expect((res)=>{
+            expect(res.body.todo.text).toBe(newText);
+            expect(res.body.todo.completed).toBe(true);
+            expect(res.body.todo.completedAt).toBeA('number');
+        })
+        .end(done);
+    });
+    it('should clear complatedAt when todo is not completed', (done)=>{
+        // Grab id if 2nd item
+        // update text
+        // set completed = false
+        // assert 200
+        // assert text has been changed
+        // assert completedAt is null    
+        var newText =  "Something todo tomorrow...";    
+        var hexId = mockTodos[1]._id.toHexString();
+        request(app)
+        .patch('/todos/'+hexId)
+        .send({text: newText, completed: false})
+        .expect(200)
+        .expect((res)=>{
+            expect(res.body.todo.text).toBe(newText);
+            expect(res.body.todo.completed).toBe(false);
+            expect(res.body.todo.completedAt).toNotExist();
+        })
+        .end(done);            
     });
 });
