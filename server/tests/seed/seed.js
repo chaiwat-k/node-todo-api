@@ -1,21 +1,8 @@
 const {ObjectID} = require('mongodb');
 const jwt = require('jsonwebtoken');
 
-const {Todo} = require('./../../models/todo');
 const {User} = require('./../../models/user');
-
-const mockTodos = [
-    {
-        _id: new ObjectID(),
-        text:'1st test todo'
-    },
-    {
-        _id: new ObjectID(),
-        text:'2nd test todo',
-        completed:true,
-        completedAt: 222
-    }
-];
+const {Todo} = require('./../../models/todo');
 
 const mockUserIDs = [
     new ObjectID(),
@@ -39,6 +26,21 @@ const mockUsers = [
             access: 'auth',
             token: jwt.sign({_id: mockUserIDs[1],access:'auth'},'abc123').toString()
         }]
+    }
+];
+
+const mockTodos = [
+    {
+        _id: new ObjectID(),
+        text:'1st test todo',
+        _creator: mockUserIDs[0]
+    },
+    {
+        _id: new ObjectID(),
+        text:'2nd test todo',
+        completed:true,
+        completedAt: 222,
+        _creator: mockUserIDs[1]
     }
 ];
 
