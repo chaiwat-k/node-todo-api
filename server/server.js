@@ -2,6 +2,7 @@ var _ = require('lodash');
 var express = require('express');
 var bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
+const bcrypt = require('bcryptjs');
 
 var config = require('./config/config');
 var {mongoose} = require('./db/mongoose');
@@ -148,6 +149,23 @@ app.post('/users', (req, res)=>{
 // GET /users/me - to get token
 app.get('/users/me', authenticate, (req, res) => {
     res.send(req.user);
+});
+
+// POST /users/login {email, password}
+app.post('/users/login', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    User.findByCredentials(body.email, body.password)
+    .then((user) => {
+        return user.generateAuthToken()
+        .then((token)=>{
+            res.header('x-auth',token);
+            res.send(user);            
+        });
+    })
+    .catch((err)=>{
+        res.status(400);
+        res.send(err);
+    });     
 });
 
 const port = process.env.PORT || 3000;
