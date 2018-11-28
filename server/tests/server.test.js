@@ -257,3 +257,13 @@ describe('POST /users/login', ()=>{
         .end(done);        
     });
 });
+
+describe('DELETE /users/me/token', ()=>{
+    it('should delete token', (done) => {
+        request(app)
+        .delete('/users/me/token')
+        .set('x-auth', mockUsers[1].tokens[1].token)
+        .expect(200)
+        .end(done);
+    });
+});
